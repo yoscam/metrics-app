@@ -46,8 +46,8 @@ Demonstrating threshold-based alerting and reporting.<br/>
 ├── templates/            # HTML templates (if applicable)<br/>
 │   └── exceeding.html</code><br/>
 
-<h2>Example Metrics Output:</h2>
-<code>bigquery_written_bytes{app_name="app1"} 8581<br/>
+<h2>Example Metrics Output:</h2><code>
+bigquery_written_bytes{app_name="app1"} 8581<br/>
 bigquery_written_bytes{app_name="app2"} 3000<br/>
 bigquery_written_bytes{app_name="app3"} 4000<br/>
 bigquery_written_bytes{app_name="app4"} 5000<br/>
