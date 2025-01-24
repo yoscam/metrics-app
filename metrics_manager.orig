@@ -1,0 +1,29 @@
+from collections import defaultdict
+
+class MetricsManager:
+    def __init__(self):
+        self.metrics_history = []  # List to store all metrics with timestamps
+        self.exceedance_count = defaultdict(int)  # Track threshold exceedances per app
+        self.write_to_file = WRITE_METRICS_TO_FILE
+        self.metrics_file = METRICS_FILE_PATH
+
+    def store_metrics(self, metrics):
+        """Store metrics with a timestamp and optionally save them to a file."""
+        timestamp = int(time.time())
+        self.metrics_history.append((timestamp, metrics))
+
+        # Save metrics to the file if enabled
+        if self.write_to_file:
+            with open(self.metrics_file, "a") as file:
+                file.write(f"{timestamp}: {metrics}\n")
+
+    def process_metrics(self, metrics, threshold):
+        """Process metrics to check for threshold exceedances."""
+        for app_name, value in metrics.items():
+            if value > threshold:
+                self.exceedance_count[app_name] += 1
+
+    def get_top_exceedance_apps(self, top_x):
+        """Retrieve the top X apps with the most threshold exceedances."""
+        sorted_apps = sorted(self.exceedance_count.items(), key=lambda x: x[1], reverse=True)
+        return sorted_apps[:top_x]

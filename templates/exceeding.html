@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Apps Exceeding Threshold</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Top {{ top_apps|length }} Apps Exceeding Threshold</h1>
+    {% if top_apps %}
+        <table>
+            <thead>
+                <tr>
+                    <th>App Name</th>
+                    <th>Exceedance Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app, count in top_apps %}
+                    <tr>
+                        <td>{{ app }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No apps have exceeded the threshold yet.</p>
+    {% endif %}
+</body>
+</html>
