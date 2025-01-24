@@ -47,9 +47,9 @@ metrics-app/<br/>
     └── exceeding.html<br/>
 
 <h2>Example Metrics Output:</h2>
-bigquery_written_bytes{app_name="app1"} 8581
-bigquery_written_bytes{app_name="app2"} 3000
-bigquery_written_bytes{app_name="app3"} 4000
-bigquery_written_bytes{app_name="app4"} 5000
-bigquery_written_bytes{app_name="app5"} 12000
-bigquery_written_bytes{app_name="app6"} 566
+bigquery_written_bytes{app_name="app1"} 8581<br/>
+bigquery_written_bytes{app_name="app2"} 3000<br/>
+bigquery_written_bytes{app_name="app3"} 4000<br/>
+bigquery_written_bytes{app_name="app4"} 5000<br/>
+bigquery_written_bytes{app_name="app5"} 12000<br/>
+bigquery_written_bytes{app_name="app6"} 566<br/>
