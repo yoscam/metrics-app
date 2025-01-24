@@ -2,8 +2,8 @@
 This Python-based web application generates and monitors metrics for multiple applications, exposing them in <strong>Prometheus</strong> format. It includes a Flask web server with a <code>/metrics</code> endpoint, which serves randomly generated metrics for a configurable number of applications. The application also processes these metrics to track threshold exceedances and displays the top applications that exceed the threshold the most.
 
 <h2>Key Features:</h2>
-<strong>Prometheus Metrics:</strong> Generates random metrics (between 1 and 12,000) for a configurable number of applications and serves them in Prometheus format.  
-<strong>Threshold Monitoring:</strong> Tracks how many times each application exceeds a defined threshold value.  
+<strong>Prometheus Metrics:</strong> Generates random metrics (between 1 and 12,000) for a configurable number of applications and serves them in Prometheus format.<br/>
+<strong>Threshold Monitoring:</strong> Tracks how many times each application exceeds a defined threshold value.<br/>
 <strong>Top Exceedance Display:</strong> Periodically displays the top X applications that have exceeded the threshold the most.  
 <strong>Configurable Parameters:</strong> All settings (e.g., number of apps, threshold, interval) are configurable via a config.py file.  
 <strong>Web Interface:</strong> Includes a <code>/metrics</code> endpoint for Prometheus and an <code>/exceeding</code> endpoint to display top exceedances in a web page.  
