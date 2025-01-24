@@ -1,15 +1,47 @@
-# Metrics Application
+Metrics Monitoring Application
+This Python-based web application generates and monitors metrics for multiple applications, exposing them in Prometheus format. It includes a Flask web server with a /metrics endpoint, which serves randomly generated metrics for a configurable number of applications. The application also processes these metrics to track threshold exceedances and displays the top applications that exceed the threshold the most.
 
-This is a Python web application that generates metrics and exposes them in Prometheus format. It also processes the metrics to track threshold exceedances and displays the top apps that exceed the threshold the most.
+Key Features:
+Prometheus Metrics: Generates random metrics (between 1 and 12,000) for a configurable number of applications and serves them in Prometheus format.
 
-## How to Run
+Threshold Monitoring: Tracks how many times each application exceeds a defined threshold value.
 
-1.	Clone the repository or download the files.
-2.	Install the required dependencies:
-	bash / cmd
-	cd {application folder}
-	pip install -r requirements.txt
-3.	Run the application:
-	python app.py
-4.	Access the application:
-	http://localhost:5000/metrics
+Top Exceedance Display: Periodically displays the top X applications that have exceeded the threshold the most.
+
+Configurable Parameters: All settings (e.g., number of apps, threshold, interval) are configurable via a config.py file.
+
+Web Interface: Includes a /metrics endpoint for Prometheus and an /exceeding endpoint to display top exceedances in a web page.
+
+Technologies Used:
+Flask: For the web server and endpoints.
+
+Prometheus Format: For serving metrics.
+
+Python: For backend logic and data processing.
+
+How to Run:
+Clone the repository.
+
+Install dependencies: pip install -r requirements.txt.
+
+Run the application: python app.py.
+
+Access the /metrics endpoint at http://localhost:5000/metrics and the /exceeding endpoint at http://localhost:5000/exceeding.
+
+Configuration:
+Modify the config.py file to adjust:
+
+Number of applications (NUM_APPS).
+
+Threshold value (THRESHOLD).
+
+Metrics generation interval (METRICS_INTERVAL).
+
+Display mode (DISPLAY_MODE).
+
+Use Cases:
+Monitoring application performance metrics.
+
+Simulating and testing Prometheus-based monitoring systems.
+
+Demonstrating threshold-based alerting and reporting.
