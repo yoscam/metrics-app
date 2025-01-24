@@ -1,25 +1,25 @@
 <h1>Metrics Monitoring Application</h1>
-This Python-based web application generates and monitors metrics for multiple applications, exposing them in <h2>Prometheus</h2> format. It includes a Flask web server with a <code>/metrics</code> endpoint, which serves randomly generated metrics for a configurable number of applications. The application also processes these metrics to track threshold exceedances and displays the top applications that exceed the threshold the most.
+This Python-based web application generates and monitors metrics for multiple applications, exposing them in <strong>Prometheus</strong> format. It includes a Flask web server with a <code>/metrics</code> endpoint, which serves randomly generated metrics for a configurable number of applications. The application also processes these metrics to track threshold exceedances and displays the top applications that exceed the threshold the most.
 
 <h2>Key Features:</h2>
-Prometheus Metrics: Generates random metrics (between 1 and 12,000) for a configurable number of applications and serves them in Prometheus format.
+<strong>Prometheus Metrics:</strong> Generates random metrics (between 1 and 12,000) for a configurable number of applications and serves them in Prometheus format.
 
-Threshold Monitoring: Tracks how many times each application exceeds a defined threshold value.
+<strong>Threshold Monitoring:</strong> Tracks how many times each application exceeds a defined threshold value.
 
-Top Exceedance Display: Periodically displays the top X applications that have exceeded the threshold the most.
+<strong>Top Exceedance Display:</strong> Periodically displays the top X applications that have exceeded the threshold the most.
 
-Configurable Parameters: All settings (e.g., number of apps, threshold, interval) are configurable via a config.py file.
+<strong>Configurable Parameters:</strong> All settings (e.g., number of apps, threshold, interval) are configurable via a config.py file.
 
-Web Interface: Includes a /metrics endpoint for Prometheus and an /exceeding endpoint to display top exceedances in a web page.
+<strong>Web Interface:</strong> Includes a /metrics endpoint for Prometheus and an /exceeding endpoint to display top exceedances in a web page.
 
-Technologies Used:
-Flask: For the web server and endpoints.
+<h2>Technologies Used:</h2>
+<strong>Flask</strong>: For the web server and endpoints.
 
-Prometheus Format: For serving metrics.
+<strong>Prometheus Format:</strong> For serving metrics.
 
-Python: For backend logic and data processing.
+<strong>Python:</strong> For backend logic and data processing.
 
-How to Run:
+<h2>How to Run:</h2>
 Clone the repository.
 
 Install dependencies: pip install -r requirements.txt.
