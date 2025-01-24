@@ -32,7 +32,7 @@ Simulating and testing Prometheus-based monitoring systems.<br/>
 Demonstrating threshold-based alerting and reporting.<br/>
 
 <h2>Repository Structure:</h2>
-metrics-app/<br/>
+<code>metrics-app/<br/>
 ├── app.py                # Flask application and endpoints<br/>
 ├── config.py             # Configuration file<br/>
 ├── metrics_manager.py    # Metrics storage and processing logic<br/>
@@ -44,7 +44,7 @@ metrics-app/<br/>
 │   ├── test_metrics_manager.py<br/>
 │   └── ...<br/>
 ├── templates/            # HTML templates (if applicable)<br/>
-│   └── exceeding.html<br/>
+│   └── exceeding.html<br/></code>
 
 <h2>Example Metrics Output:</h2>
 bigquery_written_bytes{app_name="app1"} 8581<br/>
