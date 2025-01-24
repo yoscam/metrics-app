@@ -30,3 +30,26 @@ Display mode (<code>DISPLAY_MODE</code>).<br/>
 Monitoring application performance metrics.<br/>
 Simulating and testing Prometheus-based monitoring systems.<br/>
 Demonstrating threshold-based alerting and reporting.<br/>
+
+<h2>Repository Structure:</h2>
+metrics-app/
+├── app.py                # Flask application and endpoints
+├── config.py             # Configuration file
+├── metrics_manager.py    # Metrics storage and processing logic
+├── requirements.txt      # Dependencies
+├── README.md             # Project documentation
+├── tests/                # Unit tests
+│   ├── test_app.py
+│   ├── test_metrics_generation.py
+│   ├── test_metrics_manager.py
+│   └── ...
+└── templates/            # HTML templates (if applicable)
+    └── exceeding.html
+
+<h2>Example Metrics Output:</h2>
+bigquery_written_bytes{app_name="app1"} 8581
+bigquery_written_bytes{app_name="app2"} 3000
+bigquery_written_bytes{app_name="app3"} 4000
+bigquery_written_bytes{app_name="app4"} 5000
+bigquery_written_bytes{app_name="app5"} 12000
+bigquery_written_bytes{app_name="app6"} 566
