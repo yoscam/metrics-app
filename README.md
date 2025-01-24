@@ -10,7 +10,7 @@ This Python-based web application generates and monitors metrics for multiple ap
 
 <strong>Configurable Parameters:</strong> All settings (e.g., number of apps, threshold, interval) are configurable via a config.py file.
 
-<strong>Web Interface:</strong> Includes a /metrics endpoint for Prometheus and an /exceeding endpoint to display top exceedances in a web page.
+<strong>Web Interface:</strong> Includes a <code>/metrics</code> endpoint for Prometheus and an <code>/exceeding</code> endpoint to display top exceedances in a web page.
 
 <h2>Technologies Used:</h2>
 <strong>Flask</strong>: For the web server and endpoints.
@@ -22,24 +22,24 @@ This Python-based web application generates and monitors metrics for multiple ap
 <h2>How to Run:</h2>
 Clone the repository.
 
-Install dependencies: pip install -r requirements.txt.
+Install dependencies: <code>pip install -r requirements.txt</code>.
 
-Run the application: python app.py.
+Run the application: <code>python app.py</code>.
 
-Access the /metrics endpoint at http://localhost:5000/metrics and the /exceeding endpoint at http://localhost:5000/exceeding.
+Access the <code>/metrics</code> endpoint at <code>http://localhost:5000/metrics</code> and the <code>/exceeding</code> endpoint at <code>http://localhost:5000/exceeding</code>.
 
-Configuration:
-Modify the config.py file to adjust:
+<h2>Configuration:</h2>
+Modify the <code>config.py</code> file to adjust:
 
-Number of applications (NUM_APPS).
+Number of applications (<code>NUM_APPS</code>).
 
-Threshold value (THRESHOLD).
+Threshold value (<code>THRESHOLD</code>).
 
-Metrics generation interval (METRICS_INTERVAL).
+Metrics generation interval (<code>METRICS_INTERVAL</code>).
 
-Display mode (DISPLAY_MODE).
+Display mode (<code>DISPLAY_MODE</code>).
 
-Use Cases:
+<h2>Use Cases:</h2>
 Monitoring application performance metrics.
 
 Simulating and testing Prometheus-based monitoring systems.
