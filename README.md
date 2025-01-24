@@ -1,5 +1,5 @@
 <h1>Metrics Monitoring Application</h1>
-This Python-based web application generates and monitors metrics for multiple applications, exposing them in Prometheus format. It includes a Flask web server with a /metrics endpoint, which serves randomly generated metrics for a configurable number of applications. The application also processes these metrics to track threshold exceedances and displays the top applications that exceed the threshold the most.
+This Python-based web application generates and monitors metrics for multiple applications, exposing them in <strong>Prometheus</strong>strong> format. It includes a Flask web server with a <code>/metrics</code>code> endpoint, which serves randomly generated metrics for a configurable number of applications. The application also processes these metrics to track threshold exceedances and displays the top applications that exceed the threshold the most.
 
 Key Features:
 Prometheus Metrics: Generates random metrics (between 1 and 12,000) for a configurable number of applications and serves them in Prometheus format.
