@@ -43,8 +43,8 @@ metrics-app/<br/>
 │   ├── test_metrics_generation.py<br/>
 │   ├── test_metrics_manager.py<br/>
 │   └── ...<br/>
-└── templates/            # HTML templates (if applicable)<br/>
-    └── exceeding.html<br/>
+├── templates/            # HTML templates (if applicable)<br/>
+│   └── exceeding.html<br/>
 
 <h2>Example Metrics Output:</h2>
 bigquery_written_bytes{app_name="app1"} 8581<br/>
