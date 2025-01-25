@@ -1,16 +1,16 @@
 # Configuration file for the metrics application
 
 # Number of app_names to generate metrics for
-NUM_APPS = 10000
+NUM_APPS = 30
 
 # Threshold value for metrics
 THRESHOLD = 10000
 
 # Interval (in seconds) for generating and storing metrics
-METRICS_INTERVAL = 3
+METRICS_INTERVAL = 30
 
 # Number of top apps to display for threshold exceedance
-TOP_X_APPS = 3
+TOP_X_APPS = 5
 
 # File storage configuration
 WRITE_METRICS_TO_FILE = True  # Set to False to disable writing to a file
