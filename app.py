@@ -1,10 +1,10 @@
+import os
 import logging
 from flask import Flask, Response, render_template
 import random
 import time
 import threading
 import json
-import os
 from config import (
     NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE,
     RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME, FLASK_HOST, FLASK_PORT,
@@ -21,7 +21,7 @@ log_format = '%(asctime)s - %(levelname)s - %(message)s'
 log_level = getattr(logging, LOG_LEVEL.upper(), logging.INFO)  # Convert LOG_LEVEL string to logging level
 
 # Create a logger
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logger.setLevel(log_level)
 
 # Add console handler if LOG_TO_CONSOLE is True
@@ -32,7 +32,11 @@ if LOG_TO_CONSOLE:
 
 # Add file handler if LOG_TO_FILE is True
 if LOG_TO_FILE:
-    file_handler = logging.FileHandler(LOG_FILE_NAME)
+    # Create the logs directory if it doesn't exist
+    log_dir = os.path.dirname(LOG_FILE_NAME)
+    os.makedirs(log_dir, exist_ok=True)
+
+    file_handler = logging.FileHandler(LOG_FILE_NAME, mode='a', encoding='utf-8')
     file_handler.setFormatter(logging.Formatter(log_format))
     logger.addHandler(file_handler)
 
@@ -63,7 +67,7 @@ def format_prometheus_metrics(metrics):
     return "\n".join(prometheus_metrics)
 
 def log_exceedings(top_apps):
-    """Log the top apps exceeding the threshold to the exceedings.log file."""
+    """Log the top apps exceeding the threshold to the exceedings_log.txt file."""
     if WRITE_EXCEEDINGS_TO_FILE and isinstance(top_apps, list):  # Ensure top_apps is a list
         timestamp = int(time.time())
         data = {
@@ -75,6 +79,7 @@ def log_exceedings(top_apps):
         with open(EXCEEDINGS_FILE_PATH, "a") as file:
             json.dump(data, file)
             file.write("\n")  # Add a newline for readability
+            file.flush()  # Force flush to ensure data is written
 
 def display_top_apps(top_apps):
     """Display the top apps based on the configured DISPLAY_MODE."""
@@ -85,23 +90,28 @@ def display_top_apps(top_apps):
         # The /exceeding route will handle displaying the top apps on the page
         pass
 
-    # Log the top apps to the exceedings.log file
+    # Log the top apps to the exceedings_log.txt file
     log_exceedings(top_apps)
 
 def periodic_metrics_generation(max_iterations=None):
     """Periodically generate, store, and process metrics."""
     iteration = 0
     while True:
-        if max_iterations is not None and iteration >= max_iterations:
-            break  # Stop after max_iterations
+        try:
+            if max_iterations is not None and iteration >= max_iterations:
+                break  # Stop after max_iterations
 
-        metrics = generate_metrics()
-        metrics_manager.store_metrics(metrics)
-        metrics_manager.process_metrics(metrics, THRESHOLD)
-        top_apps = metrics_manager.get_top_exceedance_apps(TOP_X_APPS)
-        display_top_apps(top_apps)
-        time.sleep(METRICS_INTERVAL)
-        iteration += 1
+            metrics = generate_metrics()
+            metrics_manager.store_metrics(metrics)
+            metrics_manager.process_metrics(metrics, THRESHOLD)
+            top_apps = metrics_manager.get_top_exceedance_apps(TOP_X_APPS)
+            display_top_apps(top_apps)
+            logger.info(f"Iteration {iteration}: Metrics processed and logged.")  # Debug log
+            time.sleep(METRICS_INTERVAL)
+            iteration += 1
+        except Exception as e:
+            logger.error(f"Error in periodic_metrics_generation: {e}", exc_info=True)
+            time.sleep(METRICS_INTERVAL)  # Wait before retrying
 
 @app.route('/metrics')
 def metrics():

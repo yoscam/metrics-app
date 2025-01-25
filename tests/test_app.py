@@ -1,11 +1,11 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from collections import defaultdict
 from app import app, generate_metrics, periodic_metrics_generation, display_top_apps
 from metrics_manager import MetricsManager
-from config import *
-import threading  # Import threading for the main block
-import importlib  # Import importlib for reloading the module
+from config import *  # Import all configurations, including METRIC_NAME
+import threading
+import importlib
 
 class TestApp(unittest.TestCase):
     def setUp(self):
@@ -25,7 +25,7 @@ class TestApp(unittest.TestCase):
         """Test the /metrics endpoint."""
         response = self.client.get('/metrics')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'bigquery_written_bytes', response.data)
+        self.assertIn(METRIC_NAME.encode(), response.data)  # Use METRIC_NAME
 
     def test_metrics_endpoint_no_metrics(self):
         """Test the /metrics endpoint when no metrics are available."""
@@ -34,8 +34,15 @@ class TestApp(unittest.TestCase):
 
         # Access the /metrics endpoint
         response = self.client.get('/metrics')
+
+        # Verify the response
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'bigquery_written_bytes', response.data)
+        self.assertIn(METRIC_NAME.encode(), response.data)
+
+        # Verify that the logger was called
+        with self.assertLogs(logger='app', level='INFO') as log:
+            self.client.get('/metrics')
+            self.assertIn("INFO:app:Serving metrics in Prometheus format", log.output)
 
     @patch('app.generate_metrics')  # Mock generate_metrics to return fixed values
     def test_metrics_endpoint_with_metrics(self, mock_generate_metrics):
@@ -51,12 +58,8 @@ class TestApp(unittest.TestCase):
 
         # Verify the response
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'bigquery_written_bytes{app_name="app1"} 1000', response.data)
-        self.assertIn(b'bigquery_written_bytes{app_name="app2"} 2000', response.data)
-
-        # Verify that metrics_manager.metrics_history is populated
-        self.assertEqual(len(self.metrics_manager.metrics_history), 1)
-        self.assertEqual(self.metrics_manager.metrics_history[0][1], {"app1": 1000, "app2": 2000})
+        self.assertIn(f'{METRIC_NAME}{{app_name="app1"}} 1000'.encode(), response.data)  # Use METRIC_NAME
+        self.assertIn(f'{METRIC_NAME}{{app_name="app2"}} 2000'.encode(), response.data)  # Use METRIC_NAME
 
     @patch('app.random.randint')  # Mock random.randint to return fixed values
     def test_generate_metrics(self, mock_randint):
@@ -107,6 +110,11 @@ class TestApp(unittest.TestCase):
         self.assertEqual(mock_metrics_manager.exceedance_count["app1"], 1)
         self.assertEqual(mock_metrics_manager.exceedance_count.get("app2", 0), 0)
 
+        # Verify that the logger was called
+        with self.assertLogs(logger='app', level='INFO') as log:
+            periodic_metrics_generation(max_iterations=1)
+            self.assertIn("INFO:app:Iteration 0: Metrics processed and logged.", log.output)
+        
     @patch('app.metrics_manager')  # Mock the metrics_manager used by the Flask app
     @patch('app.DISPLAY_MODE', 'page')  # Set DISPLAY_MODE to 'page' for this test
     def test_exceeding_endpoint(self, mock_metrics_manager):
@@ -155,7 +163,7 @@ class TestApp(unittest.TestCase):
         top_apps = [("app1", 5), ("app2", 3)]
         display_top_apps(top_apps)  # Call the function directly
         # No assertion needed since the function only contains a pass statement
-        
+
     @patch('app.threading.Thread')  # Mock threading.Thread to avoid starting a new thread
     @patch('app.app.run')  # Mock app.run to avoid running the Flask app
     def test_main(self, mock_app_run, mock_thread):

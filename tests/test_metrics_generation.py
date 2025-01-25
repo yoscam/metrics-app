@@ -1,6 +1,6 @@
 import unittest
 from app import generate_metrics
-from config import NUM_APPS, RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, THRESHOLD
+from config import NUM_APPS, RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, THRESHOLD, METRIC_NAME
 
 class TestMetricsGeneration(unittest.TestCase):
     def test_number_of_apps(self):
