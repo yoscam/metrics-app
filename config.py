@@ -7,13 +7,13 @@ NUM_APPS = 10
 THRESHOLD = 10000
 
 # Interval (in seconds) for generating and storing metrics
-METRICS_INTERVAL = 3
+METRICS_INTERVAL = 30
 
 # Number of top apps to display for threshold exceedance
 TOP_X_APPS = 3
 
 # File storage configuration
-WRITE_METRICS_TO_FILE = True  # Set to False to disable writing to a file
+WRITE_METRICS_TO_FILE = False  # Set to False to disable writing to a file
 METRICS_FILE_PATH = "data/metrics_log.txt"  # Custom file path
 
 # Display mode for top apps exceeding the threshold
