@@ -54,7 +54,8 @@ bigquery_written_bytes{app_name="app4"} 5000<br/>
 bigquery_written_bytes{app_name="app5"} 12000<br/>
 bigquery_written_bytes{app_name="app6"} 566</code><br/>
 
-<h2>Running with Docker</h2><br/>
+<h2>Running with Docker</h2>
+
 To pull and run the Docker image, follow these steps:
 log in to Docker Hub using the read-only token stored in GitHub Secrets:
 <code>echo ${{ secrets.DOCKER_HUB_READ_ONLY_TOKEN }} | docker login -u yoscam2 --password-stdin
