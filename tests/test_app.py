@@ -3,7 +3,7 @@ from unittest.mock import patch
 from collections import defaultdict
 from app import app, generate_metrics, periodic_metrics_generation, display_top_apps
 from metrics_manager import MetricsManager
-from config import THRESHOLD, TOP_X_APPS, DISPLAY_MODE, NUM_APPS, RANDOM_METRIC_MIN, RANDOM_METRIC_MAX
+from config import *
 import threading  # Import threading for the main block
 import importlib  # Import importlib for reloading the module
 
@@ -138,12 +138,13 @@ class TestApp(unittest.TestCase):
         self.assertIn(b'Display mode is not set to \'page\' or \'both\'.', response.data)
 
     @patch('app.DISPLAY_MODE', 'console')  # Mock DISPLAY_MODE to 'console' for this test
+    @patch('app.TOP_X_APPS', 5)  # Mock TOP_X_APPS to 5 for this test
     @patch('builtins.print')  # Mock print to test console output
     def test_display_top_apps_console(self, mock_print):
         """Test the display_top_apps function in console mode."""
         top_apps = [("app1", 5), ("app2", 3)]
         display_top_apps(top_apps)  # Call the function directly
-        mock_print.assert_called_with(f"Top {TOP_X_APPS} apps exceeding threshold: {top_apps}")
+        mock_print.assert_called_with(f"Top 5 apps exceeding threshold: {top_apps}")
 
     @patch('app.DISPLAY_MODE', 'page')  # Mock DISPLAY_MODE to 'page' for this test
     def test_display_top_apps_page_mode(self):

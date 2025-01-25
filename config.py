@@ -31,3 +31,10 @@ METRIC_NAME = "bigquery_written_bytes"  # Change this to your desired metric nam
 # Flask server configuration
 FLASK_HOST = "0.0.0.0"  # Host to run the Flask app (e.g., "0.0.0.0" for all interfaces)
 FLASK_PORT = 5000       # Port to run the Flask app
+
+# Logging Configuration
+LOG_TO_CONSOLE = True  # Print logs to the console
+LOG_TO_FILE = True     # Write logs to a file
+LOG_FILE_NAME = "app.log"  # Name of the log file
+LOG_LEVEL = "INFO"     # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+LOG_HTTP_REQUESTS = False  # Disable HTTP request logs on the console

@@ -1,14 +1,43 @@
+import logging
 from flask import Flask, Response, render_template
 import random
 import time
 import threading
 from config import (
     NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE,
-    RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME, FLASK_HOST, FLASK_PORT
+    RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME, FLASK_HOST, FLASK_PORT,
+    LOG_TO_CONSOLE, LOG_TO_FILE, LOG_FILE_NAME, LOG_LEVEL, LOG_HTTP_REQUESTS
 )
 from metrics_manager import MetricsManager
 
+# Initialize Flask app
 app = Flask(__name__)
+
+# Configure logging
+log_format = '%(asctime)s - %(levelname)s - %(message)s'
+log_level = getattr(logging, LOG_LEVEL.upper(), logging.INFO)  # Convert LOG_LEVEL string to logging level
+
+# Create a logger
+logger = logging.getLogger()
+logger.setLevel(log_level)
+
+# Add console handler if LOG_TO_CONSOLE is True
+if LOG_TO_CONSOLE:
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(logging.Formatter(log_format))
+    logger.addHandler(console_handler)
+
+# Add file handler if LOG_TO_FILE is True
+if LOG_TO_FILE:
+    file_handler = logging.FileHandler(LOG_FILE_NAME)
+    file_handler.setFormatter(logging.Formatter(log_format))
+    logger.addHandler(file_handler)
+
+# Disable Flask's default HTTP request logging if LOG_HTTP_REQUESTS is False
+if not LOG_HTTP_REQUESTS:
+    logging.getLogger('werkzeug').setLevel(logging.ERROR)  # Suppress HTTP request logs
+
+# Initialize MetricsManager
 metrics_manager = MetricsManager()
 
 def generate_metrics():
@@ -60,15 +89,18 @@ def metrics():
 
     # Format the metrics in Prometheus format
     prometheus_metrics = format_prometheus_metrics(last_metrics)
+    logger.info("Serving metrics in Prometheus format")  # Log the request
     return Response(prometheus_metrics, mimetype="text/plain")
 
 @app.route('/exceeding')
 def exceeding():
     """Endpoint to display the top apps exceeding the threshold."""
     if DISPLAY_MODE not in ["page", "both"]:
+        logger.warning("Display mode is not set to 'page' or 'both'")  # Log the warning
         return "Display mode is not set to 'page' or 'both'.", 404
 
     top_apps = metrics_manager.get_top_exceedance_apps(TOP_X_APPS)
+    logger.info("Serving top apps exceeding threshold")  # Log the request
     return render_template('exceeding.html', top_apps=top_apps)
 
 def main():
@@ -76,6 +108,7 @@ def main():
     # Start the periodic metrics generation in a separate thread
     threading.Thread(target=periodic_metrics_generation, daemon=True).start()
     # Run the Flask app
+    logger.info(f"Starting Flask app on {FLASK_HOST}:{FLASK_PORT}")  # Log the app start
     app.run(host=FLASK_HOST, port=FLASK_PORT)
 
 if __name__ == "__main__":
