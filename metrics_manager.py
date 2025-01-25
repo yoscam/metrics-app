@@ -5,11 +5,11 @@ from collections import defaultdict
 from config import WRITE_METRICS_TO_FILE, METRICS_FILE_PATH
 
 class MetricsManager:
-    def __init__(self):
+    def __init__(self, metrics_file=None):
         self.metrics_history = []  # List to store all metrics with timestamps
         self.exceedance_count = defaultdict(int)  # Track threshold exceedances per app
         self.write_to_file = WRITE_METRICS_TO_FILE
-        self.metrics_file = METRICS_FILE_PATH
+        self.metrics_file = metrics_file if metrics_file is not None else METRICS_FILE_PATH  # Use custom file path if provided
 
     def store_metrics(self, metrics):
         """Store metrics with a timestamp and optionally save them to a JSON file."""
@@ -21,7 +21,10 @@ class MetricsManager:
             self._write_json(timestamp, metrics)
 
     def _write_json(self, timestamp, metrics):
-        """Write metrics to the file in JSON format."""
+        """Write metrics to the file in JSON format if write_to_file is True."""
+        if not self.write_to_file:
+            return  # Do not write to file if write_to_file is False
+
         data = {
             "timestamp": timestamp,
             "metrics": metrics
