@@ -2,7 +2,7 @@ import os
 import json
 import unittest
 from metrics_manager import MetricsManager
-from config import METRICS_FILE_PATH
+from config import METRICS_FILE_PATH, DELETE_PREVIOUS_METRICS_FILE
 
 class TestMetricsManagerFileWriting(unittest.TestCase):
     def setUp(self):
@@ -10,7 +10,7 @@ class TestMetricsManagerFileWriting(unittest.TestCase):
         self.temp_file_path = METRICS_FILE_PATH + ".tmp"
 
         # Create a MetricsManager instance with the temporary file path
-        self.metrics_manager = MetricsManager(metrics_file=self.temp_file_path)  # Pass the file path as a keyword argument
+        self.metrics_manager = MetricsManager(metrics_file=self.temp_file_path)
 
     def tearDown(self):
         # Clean up the temporary file if it exists
@@ -72,6 +72,21 @@ class TestMetricsManagerFileWriting(unittest.TestCase):
         # Verify the metrics are still stored in memory
         self.assertEqual(len(self.metrics_manager.metrics_history), 1)
         self.assertEqual(self.metrics_manager.metrics_history[0][1], metrics)
+
+    def test_delete_previous_metrics_file(self):
+        """Test that the previous metrics file is deleted if DELETE_PREVIOUS_METRICS_FILE is True."""
+        # Create a dummy file to simulate a previous metrics file
+        with open(self.temp_file_path, "w") as file:
+            file.write("dummy content")
+
+        # Verify the file exists
+        self.assertTrue(os.path.exists(self.temp_file_path))
+
+        # Reinitialize MetricsManager with DELETE_PREVIOUS_METRICS_FILE set to True
+        self.metrics_manager = MetricsManager(metrics_file=self.temp_file_path)
+
+        # Verify the file was deleted
+        self.assertFalse(os.path.exists(self.temp_file_path))
 
 if __name__ == "__main__":
     unittest.main()

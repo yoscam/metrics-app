@@ -2,7 +2,7 @@ import time
 import os
 import json
 from collections import defaultdict
-from config import WRITE_METRICS_TO_FILE, METRICS_FILE_PATH
+from config import WRITE_METRICS_TO_FILE, METRICS_FILE_PATH, DELETE_PREVIOUS_METRICS_FILE
 
 class MetricsManager:
     def __init__(self, metrics_file=None):
@@ -10,6 +10,10 @@ class MetricsManager:
         self.exceedance_count = defaultdict(int)  # Track threshold exceedances per app
         self.write_to_file = WRITE_METRICS_TO_FILE
         self.metrics_file = metrics_file if metrics_file is not None else METRICS_FILE_PATH  # Use custom file path if provided
+
+        # Delete the previous metrics file if the option is enabled
+        if DELETE_PREVIOUS_METRICS_FILE and os.path.exists(self.metrics_file):
+            os.remove(self.metrics_file)
 
     def store_metrics(self, metrics):
         """Store metrics with a timestamp and optionally save them to a JSON file."""

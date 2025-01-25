@@ -15,6 +15,7 @@ TOP_X_APPS = 3
 # File storage configuration
 WRITE_METRICS_TO_FILE = True  # Set to False to disable writing to a file
 METRICS_FILE_PATH = "data/metrics_log.txt"  # Custom file path
+DELETE_PREVIOUS_METRICS_FILE = True  # Set to False to keep the previous file
 
 # Display mode for top apps exceeding the threshold
 # Options: "console", "page", "both"
