@@ -19,6 +19,11 @@ Install dependencies: <code>pip install -r requirements.txt</code>.<br/>
 Run the application: <code>python app.py</code>.<br/>
 Access the <code>/metrics</code> endpoint at <code>http://localhost:5000/metrics</code> and the <code>/exceeding</code> endpoint at <code>http://localhost:5000/exceeding</code>.<br/>
 
+<h2>Running with Docker:</h2>
+<strong>To pull and run the Docker image, follow these steps</strong>:<br/>
+<code>docker pull yoscam2/metrics-app:latest<br/>
+docker run -p 5000:5000 yoscam2/metrics-app</code><br/>
+
 <h2>Configuration:</h2>
 <h3>Application Settings</h3>
 <code>NUM_APPS</code>: Number of app names to generate metrics for.<br/>
@@ -62,8 +67,3 @@ bigquery_written_bytes{app_name="app3"} 4000<br/>
 bigquery_written_bytes{app_name="app4"} 5000<br/>
 bigquery_written_bytes{app_name="app5"} 12000<br/>
 bigquery_written_bytes{app_name="app6"} 566</code><br/>
-
-<h2>Running with Docker:</h2>
-<strong>To pull and run the Docker image, follow these steps</strong>:<br/>
-<code>docker pull yoscam2/metrics-app:latest<br/>
-docker run -p 5000:5000 yoscam2/metrics-app</code><br/>
