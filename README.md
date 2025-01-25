@@ -70,7 +70,7 @@ Demonstrating threshold-based alerting and reporting.<br/>
 │   └── exceeding.html<br/>
 ├── data/                 # Data and log files<br/>
 │   ├── metrics_log.txt   # Metrics log file<br/>
-└── └── exceedings_log.txt</code> # Exceedings log file<br/>
+└── └── exceedings_log.txt# Exceedings log file</code><br/>
 
 <h2>Example Metrics Output:</h2><code>
 bigquery_written_bytes{app_name="app1"} 8581<br/>
