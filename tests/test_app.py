@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from collections import defaultdict
 from app import app, generate_metrics, periodic_metrics_generation, display_top_apps
 from metrics_manager import MetricsManager
-from config import *  # Import all configurations, including METRIC_NAME
+from config import *  # Import all configurations
 import threading
 import importlib
 
@@ -25,7 +25,7 @@ class TestApp(unittest.TestCase):
         """Test the /metrics endpoint."""
         response = self.client.get('/metrics')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(METRIC_NAME.encode(), response.data)  # Use METRIC_NAME
+        self.assertIn(METRIC_NAME.encode(), response.data)
 
     def test_metrics_endpoint_no_metrics(self):
         """Test the /metrics endpoint when no metrics are available."""

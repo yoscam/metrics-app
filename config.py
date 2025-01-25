@@ -7,7 +7,7 @@ NUM_APPS = 30
 THRESHOLD = 10000
 
 # Interval (in seconds) for generating and storing metrics
-METRICS_INTERVAL = 30
+METRICS_INTERVAL = 3
 
 # Number of top apps to display for threshold exceedance
 TOP_X_APPS = 5
