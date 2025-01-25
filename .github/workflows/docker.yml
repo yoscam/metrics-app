@@ -14,12 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Log in to Docker Hub using the read-only token
+      # Step 2: Log in to Docker Hub using the read/write token
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: yoscam2  # Your Docker Hub username
-          password: ${{ secrets.DOCKER_HUB_READ_ONLY_TOKEN }}  # Read-only token
+          password: ${{ secrets.DOCKER_HUB_READ_WRITE_TOKEN }}  # Read/write token
 
       # Step 3: Build and push the Docker image
       - name: Build and push Docker image
