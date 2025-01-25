@@ -24,3 +24,6 @@ DISPLAY_MODE = "both"  # Change to "console" or "page" as needed
 # Configuration for random metric generation
 RANDOM_METRIC_MIN = 1  # Minimum value for random metrics
 RANDOM_METRIC_MAX = 12000          # Maximum value for random metrics
+
+# Metric name to use in Prometheus format
+METRIC_NAME = "_bigquery_written_bytes"  # Change this to your desired metric name

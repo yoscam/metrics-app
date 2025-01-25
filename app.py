@@ -2,7 +2,7 @@ from flask import Flask, Response, render_template
 import random
 import time
 import threading
-from config import NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE, RANDOM_METRIC_MIN, RANDOM_METRIC_MAX
+from config import NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE, RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME
 from metrics_manager import MetricsManager
 
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def format_prometheus_metrics(metrics):
     """Format metrics in Prometheus format."""
     prometheus_metrics = []
     for app_name, value in metrics.items():
-        prometheus_metrics.append(f'bigquery_written_bytes{{app_name="{app_name}"}} {value}')
+        prometheus_metrics.append(f'{METRIC_NAME}{{app_name="{app_name}"}} {value}')
     return "\n".join(prometheus_metrics)
 
 def display_top_apps(top_apps):
