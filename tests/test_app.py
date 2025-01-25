@@ -91,6 +91,9 @@ class TestApp(unittest.TestCase):
             )
         )
 
+        # Mock get_top_exceedance_apps to return a valid list of tuples
+        mock_metrics_manager.get_top_exceedance_apps.return_value = [("app1", 1)]
+
         # Call the function with a limited number of iterations
         periodic_metrics_generation(max_iterations=1)
 

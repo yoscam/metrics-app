@@ -17,6 +17,11 @@ WRITE_METRICS_TO_FILE = True  # Set to False to disable writing to a file
 METRICS_FILE_PATH = "data/metrics_log.txt"  # Custom file path
 DELETE_PREVIOUS_METRICS_FILE = True  # Set to False to keep the previous file
 
+# Exceedings log configuration
+WRITE_EXCEEDINGS_TO_FILE = True  # Set to False to disable writing to a file
+EXCEEDINGS_FILE_PATH = "data/exceedings_log.txt"  # Path to the exceedings log file
+DELETE_PREVIOUS_EXCEEDINGS_FILE = True  # Set to False to keep the previous file
+
 # Display mode for top apps exceeding the threshold
 # Options: "console", "page", "both"
 DISPLAY_MODE = "both"  # Change to "console" or "page" as needed

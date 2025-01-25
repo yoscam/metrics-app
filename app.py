@@ -3,10 +3,13 @@ from flask import Flask, Response, render_template
 import random
 import time
 import threading
+import json
+import os
 from config import (
     NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE,
     RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME, FLASK_HOST, FLASK_PORT,
-    LOG_TO_CONSOLE, LOG_TO_FILE, LOG_FILE_NAME, LOG_LEVEL, LOG_HTTP_REQUESTS
+    LOG_TO_CONSOLE, LOG_TO_FILE, LOG_FILE_NAME, LOG_LEVEL, LOG_HTTP_REQUESTS,
+    WRITE_EXCEEDINGS_TO_FILE, EXCEEDINGS_FILE_PATH, DELETE_PREVIOUS_EXCEEDINGS_FILE
 )
 from metrics_manager import MetricsManager
 
@@ -40,6 +43,10 @@ if not LOG_HTTP_REQUESTS:
 # Initialize MetricsManager
 metrics_manager = MetricsManager()
 
+# Delete the previous exceedings file if the option is enabled
+if DELETE_PREVIOUS_EXCEEDINGS_FILE and os.path.exists(EXCEEDINGS_FILE_PATH):
+    os.remove(EXCEEDINGS_FILE_PATH)
+
 def generate_metrics():
     """Generate random metrics for each app."""
     metrics = {
@@ -55,6 +62,20 @@ def format_prometheus_metrics(metrics):
         prometheus_metrics.append(f'{METRIC_NAME}{{app_name="{app_name}"}} {value}')
     return "\n".join(prometheus_metrics)
 
+def log_exceedings(top_apps):
+    """Log the top apps exceeding the threshold to the exceedings.log file."""
+    if WRITE_EXCEEDINGS_TO_FILE and isinstance(top_apps, list):  # Ensure top_apps is a list
+        timestamp = int(time.time())
+        data = {
+            "timestamp": timestamp,
+            "top_apps": top_apps
+        }
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(EXCEEDINGS_FILE_PATH), exist_ok=True)
+        with open(EXCEEDINGS_FILE_PATH, "a") as file:
+            json.dump(data, file)
+            file.write("\n")  # Add a newline for readability
+
 def display_top_apps(top_apps):
     """Display the top apps based on the configured DISPLAY_MODE."""
     if DISPLAY_MODE in ["console", "both"]:
@@ -63,6 +84,9 @@ def display_top_apps(top_apps):
     if DISPLAY_MODE in ["page", "both"]:
         # The /exceeding route will handle displaying the top apps on the page
         pass
+
+    # Log the top apps to the exceedings.log file
+    log_exceedings(top_apps)
 
 def periodic_metrics_generation(max_iterations=None):
     """Periodically generate, store, and process metrics."""

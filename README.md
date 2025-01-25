@@ -36,9 +36,18 @@ docker run -p 5000:5000 yoscam2/metrics-app</code><br/>
 <code>WRITE_METRICS_TO_FILE</code>: Set to True to enable writing metrics to a file, or False to disable.<br/>
 <code>METRICS_FILE_PATH</code>: Path to the file where metrics will be stored.<br/>
 <code>DELETE_PREVIOUS_METRICS_FILE</code>: Set to True to delete the previous metrics file before starting, or False to keep it.<br/>
+<code>WRITE_EXCEEDINGS_TO_FILE</code>: Set to True to enable writing top exceedances to a file, or False to disable.<br/>
+<code>EXCEEDINGS_FILE_PATH</code>: Path to the file where top exceedances will be stored (default: data/exceedings_log.txt).<br/>
+<code>DELETE_PREVIOUS_EXCEEDINGS_FILE</code>: Set to True to delete the previous exceedances file before starting, or False to keep it.<br/>
 <h3>Flask Server Settings</h3>
 <code>FLASK_HOST</code>: Host to run the Flask app. Use "0.0.0.0" to allow access from all interfaces or "127.0.0.1" for local access only.<br/>
 <code>FLASK_PORT</code>: Port to run the Flask app.<br/>
+<h3>Logging Configuration</h3>
+<code>LOG_TO_CONSOLE</code>: Set to True to print logs to the console.<br/>
+<code>LOG_TO_FILE</code>: Set to True to write logs to a file.<br/>
+<code>LOG_FILE_NAME</code>: Name of the log file (default: app.log).<br/>
+<code>LOG_LEVEL</code>: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL).<br/>
+<code>LOG_HTTP_REQUESTS</code>: Set to False to disable HTTP request logs on the console.<br/>
 
 <h2>Use Cases:</h2>
 Monitoring application performance metrics.<br/>
@@ -57,8 +66,11 @@ Demonstrating threshold-based alerting and reporting.<br/>
 │   ├── test_metrics_generation.py<br/>
 │   ├── test_metrics_manager.py<br/>
 │   └── ...<br/>
-├── templates/            # HTML templates (if applicable)<br/>
-│   └── exceeding.html</code><br/>
+├── templates/            # HTML templates<br/>
+│   └── exceeding.html<br/>
+├── data/                 # Data and log files<br/>
+│   ├── metrics_log.txt   # Metrics log file<br/>
+└── └── exceedings_log.txt</code> # Exceedings log file<br/>
 
 <h2>Example Metrics Output:</h2><code>
 bigquery_written_bytes{app_name="app1"} 8581<br/>
