@@ -27,3 +27,7 @@ RANDOM_METRIC_MAX = 12000          # Maximum value for random metrics
 
 # Metric name to use in Prometheus format
 METRIC_NAME = "bigquery_written_bytes"  # Change this to your desired metric name
+
+# Flask server configuration
+FLASK_HOST = "0.0.0.0"  # Host to run the Flask app (e.g., "0.0.0.0" for all interfaces)
+FLASK_PORT = 5000       # Port to run the Flask app

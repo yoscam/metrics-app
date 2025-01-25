@@ -2,7 +2,10 @@ from flask import Flask, Response, render_template
 import random
 import time
 import threading
-from config import NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE, RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME
+from config import (
+    NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE,
+    RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME, FLASK_HOST, FLASK_PORT
+)
 from metrics_manager import MetricsManager
 
 app = Flask(__name__)
@@ -73,7 +76,7 @@ def main():
     # Start the periodic metrics generation in a separate thread
     threading.Thread(target=periodic_metrics_generation, daemon=True).start()
     # Run the Flask app
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host=FLASK_HOST, port=FLASK_PORT)
 
 if __name__ == "__main__":
     main()
