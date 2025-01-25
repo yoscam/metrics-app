@@ -26,4 +26,4 @@ RANDOM_METRIC_MIN = 1  # Minimum value for random metrics
 RANDOM_METRIC_MAX = 12000          # Maximum value for random metrics
 
 # Metric name to use in Prometheus format
-METRIC_NAME = "_bigquery_written_bytes"  # Change this to your desired metric name
+METRIC_NAME = "bigquery_written_bytes"  # Change this to your desired metric name
