@@ -20,11 +20,21 @@ Run the application: <code>python app.py</code>.<br/>
 Access the <code>/metrics</code> endpoint at <code>http://localhost:5000/metrics</code> and the <code>/exceeding</code> endpoint at <code>http://localhost:5000/exceeding</code>.<br/>
 
 <h2>Configuration:</h2>
-Modify the <code>config.py</code> file to adjust:<br/>
-Number of applications (<code>NUM_APPS</code>).<br/>
-Threshold value (<code>THRESHOLD</code>).<br/>
-Metrics generation interval (<code>METRICS_INTERVAL</code>).<br/>
-Display mode (<code>DISPLAY_MODE</code>).<br/>
+<h3>Application Settings</h3>
+NUM_APPS: Number of app names to generate metrics for.
+THRESHOLD: Threshold value for metrics. Apps exceeding this value will be tracked.
+METRICS_INTERVAL: Interval (in seconds) for generating and storing metrics.
+TOP_X_APPS: Number of top apps to display for threshold exceedance.
+DISPLAY_MODE: Display mode for top apps exceeding the threshold.
+Options: "console", "page", or "both".
+METRIC_NAME: Name of the metric to use in Prometheus format.
+File Storage Settings
+WRITE_METRICS_TO_FILE: Set to True to enable writing metrics to a file, or False to disable.
+METRICS_FILE_PATH: Path to the file where metrics will be stored.
+DELETE_PREVIOUS_METRICS_FILE: Set to True to delete the previous metrics file before starting, or False to keep it.
+Flask Server Settings
+FLASK_HOST: Host to run the Flask app. Use "0.0.0.0" to allow access from all interfaces or "127.0.0.1" for local access only.
+FLASK_PORT: Port to run the Flask app.
 
 <h2>Use Cases:</h2>
 Monitoring application performance metrics.<br/>
