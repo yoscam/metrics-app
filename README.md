@@ -68,6 +68,8 @@ Demonstrating threshold-based alerting and reporting.<br/>
 │   └── ...<br/>
 ├── templates/            # HTML templates<br/>
 │   └── exceeding.html<br/>
+├── log/            	  # Logs<br/>
+│   └── app.log<br/>
 ├── data/                 # Data and log files<br/>
 │   ├── metrics_log.txt   # Metrics log file<br/>
 └── └── exceedings_log.txt# Exceedings log file</code><br/>
