@@ -12,6 +12,14 @@ import atexit  # Import atexit to handle cleanup
 # Initialize Flask app
 app = Flask(__name__)
 
+# Disable Werkzeug's request logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+# Optionally, disable Flask's built-in request logging
+from werkzeug.serving import WSGIRequestHandler
+WSGIRequestHandler.log_request = lambda *args, **kwargs: None
+
 # Configure logging
 log_format = '%(asctime)s - %(levelname)s - %(message)s'
 log_level = getattr(logging, LOG_LEVEL.upper(), logging.INFO)  # Convert LOG_LEVEL string to logging level
@@ -20,8 +28,8 @@ log_level = getattr(logging, LOG_LEVEL.upper(), logging.INFO)  # Convert LOG_LEV
 logger = logging.getLogger(__name__)
 logger.setLevel(log_level)
 
-# Add console handler if LOG_TO_CONSOLE is True
-if LOG_TO_CONSOLE:
+# Add console handler if LOG_TO_CONSOLE is True and LOG_TO_CONSOLE_ONLY_EXCEEDINGS is False
+if LOG_TO_CONSOLE and not LOG_TO_CONSOLE_ONLY_EXCEEDINGS:
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(logging.Formatter(log_format))
     logger.addHandler(console_handler)
@@ -86,10 +94,6 @@ def display_top_apps(top_apps):
             # Use the logger if all logs are allowed
             logger.info(f"Top {TOP_X_APPS} apps exceeding threshold: {top_apps}")
 
-    if DISPLAY_MODE in ["page", "both"]:
-        # The /exceeding route will handle displaying the top apps on the page
-        pass
-
     # Log the top apps to the exceedings_log.txt file
     log_exceedings(top_apps)
 
@@ -107,7 +111,7 @@ def periodic_metrics_generation(max_iterations=None):
             top_apps = metrics_manager.get_top_exceedance_apps(TOP_X_APPS)
             display_top_apps(top_apps)
 
-            # Always log the iteration message to the file handler
+            # Log the iteration message to the file handler only
             logger.info(f"Iteration {iteration}: Metrics processed and logged.")
 
             time.sleep(METRICS_INTERVAL)

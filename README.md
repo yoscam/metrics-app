@@ -22,7 +22,7 @@ Access the <code>/metrics</code> endpoint at <code>http://localhost:5000/metrics
 <h2>Running with Docker:</h2>
 <strong>To pull and run the Docker image, follow these steps</strong>:<br/>
 <code>docker pull yoscam2/metrics-app:latest<br/>
-docker run -p 5000:5000 yoscam2/metrics-app</code><br/>
+docker run -p 5000:5000 -e PYTHONUNBUFFERED=1 yoscam2/metrics-app</code><br/>
 
 <h2>Configuration:</h2>
 <h3>Application Settings</h3>
@@ -47,7 +47,7 @@ docker run -p 5000:5000 yoscam2/metrics-app</code><br/>
 <code>LOG_TO_FILE</code>: Set to True to write logs to a file.<br/>
 <code>LOG_FILE_NAME</code>: Name of the log file (default: app.log).<br/>
 <code>LOG_LEVEL</code>: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL).<br/>
-<code>LOG_HTTP_REQUESTS</code>: Set to False to disable HTTP request logs on the console.<br/>
+<code>LOG_TO_CONSOLE_ONLY_EXCEEDINGS</code>: Set to True to only log exceedances to the console.<br/>
 
 <h2>Use Cases:</h2>
 Monitoring application performance metrics.<br/>

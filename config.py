@@ -7,7 +7,7 @@ NUM_APPS = 30
 THRESHOLD = 10000
 
 # Interval (in seconds) for generating and storing metrics
-METRICS_INTERVAL = 3
+METRICS_INTERVAL = 30
 
 # Number of top apps to display for threshold exceedance
 TOP_X_APPS = 5
@@ -40,7 +40,6 @@ FLASK_PORT = 5000       # Port to run the Flask app
 # Logging Configuration
 LOG_TO_CONSOLE = True  # Print logs to the console
 LOG_TO_FILE = True     # Write logs to a file
-LOG_FILE_NAME = "/app/logs/app.log"  # Name of the log file
+LOG_FILE_NAME = "log/app.log"  # Name of the log file
 LOG_LEVEL = "INFO"     # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-#LOG_HTTP_REQUESTS = False  # Disable HTTP request logs on the console
 LOG_TO_CONSOLE_ONLY_EXCEEDINGS = True  # Set to True to only log exceedances to the console
