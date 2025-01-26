@@ -5,13 +5,9 @@ import random
 import time
 import threading
 import json
-from config import (
-    NUM_APPS, THRESHOLD, METRICS_INTERVAL, TOP_X_APPS, DISPLAY_MODE,
-    RANDOM_METRIC_MIN, RANDOM_METRIC_MAX, METRIC_NAME, FLASK_HOST, FLASK_PORT,
-    LOG_TO_CONSOLE, LOG_TO_FILE, LOG_FILE_NAME, LOG_LEVEL, LOG_HTTP_REQUESTS,
-    WRITE_EXCEEDINGS_TO_FILE, EXCEEDINGS_FILE_PATH, DELETE_PREVIOUS_EXCEEDINGS_FILE
-)
+from config import *
 from metrics_manager import MetricsManager
+import atexit  # Import atexit to handle cleanup
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -40,9 +36,8 @@ if LOG_TO_FILE:
     file_handler.setFormatter(logging.Formatter(log_format))
     logger.addHandler(file_handler)
 
-# Disable Flask's default HTTP request logging if LOG_HTTP_REQUESTS is False
-if not LOG_HTTP_REQUESTS:
-    logging.getLogger('werkzeug').setLevel(logging.ERROR)  # Suppress HTTP request logs
+    # Register a cleanup function to close the file handler on application exit
+    atexit.register(file_handler.close)
 
 # Initialize MetricsManager
 metrics_manager = MetricsManager()
@@ -84,7 +79,12 @@ def log_exceedings(top_apps):
 def display_top_apps(top_apps):
     """Display the top apps based on the configured DISPLAY_MODE."""
     if DISPLAY_MODE in ["console", "both"]:
-        print(f"Top {TOP_X_APPS} apps exceeding threshold: {top_apps}")
+        if LOG_TO_CONSOLE_ONLY_EXCEEDINGS:
+            # Print directly to the console if only exceedance logs are allowed
+            print(f"Top {TOP_X_APPS} apps exceeding threshold: {top_apps}")
+        else:
+            # Use the logger if all logs are allowed
+            logger.info(f"Top {TOP_X_APPS} apps exceeding threshold: {top_apps}")
 
     if DISPLAY_MODE in ["page", "both"]:
         # The /exceeding route will handle displaying the top apps on the page
@@ -106,7 +106,10 @@ def periodic_metrics_generation(max_iterations=None):
             metrics_manager.process_metrics(metrics, THRESHOLD)
             top_apps = metrics_manager.get_top_exceedance_apps(TOP_X_APPS)
             display_top_apps(top_apps)
-            logger.info(f"Iteration {iteration}: Metrics processed and logged.")  # Debug log
+
+            # Always log the iteration message to the file handler
+            logger.info(f"Iteration {iteration}: Metrics processed and logged.")
+
             time.sleep(METRICS_INTERVAL)
             iteration += 1
         except Exception as e:

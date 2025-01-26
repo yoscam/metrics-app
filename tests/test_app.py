@@ -1,6 +1,9 @@
 import unittest
 from unittest.mock import patch, MagicMock
+import os  # Add this import
+import logging  # Add this import
 from collections import defaultdict
+import app as app_module  # Import the app module
 from app import app, generate_metrics, periodic_metrics_generation, display_top_apps
 from metrics_manager import MetricsManager
 from config import *  # Import all configurations
@@ -97,8 +100,16 @@ class TestApp(unittest.TestCase):
         # Mock get_top_exceedance_apps to return a valid list of tuples
         mock_metrics_manager.get_top_exceedance_apps.return_value = [("app1", 1)]
 
+        # Temporarily set LOG_TO_CONSOLE_ONLY_EXCEEDINGS to False for this test
+        from config import LOG_TO_CONSOLE_ONLY_EXCEEDINGS
+        original_setting = LOG_TO_CONSOLE_ONLY_EXCEEDINGS
+        LOG_TO_CONSOLE_ONLY_EXCEEDINGS = False
+
         # Call the function with a limited number of iterations
         periodic_metrics_generation(max_iterations=1)
+
+        # Restore the original setting
+        LOG_TO_CONSOLE_ONLY_EXCEEDINGS = original_setting
 
         # Ensure time.sleep was called
         mock_sleep.assert_called()
@@ -112,8 +123,16 @@ class TestApp(unittest.TestCase):
 
         # Verify that the logger was called
         with self.assertLogs(logger='app', level='INFO') as log:
+            # Temporarily set LOG_TO_CONSOLE_ONLY_EXCEEDINGS to False for this test
+            from config import LOG_TO_CONSOLE_ONLY_EXCEEDINGS
+            original_setting = LOG_TO_CONSOLE_ONLY_EXCEEDINGS
+            LOG_TO_CONSOLE_ONLY_EXCEEDINGS = False
+
             periodic_metrics_generation(max_iterations=1)
             self.assertIn("INFO:app:Iteration 0: Metrics processed and logged.", log.output)
+
+            # Restore the original setting
+            LOG_TO_CONSOLE_ONLY_EXCEEDINGS = original_setting
         
     @patch('app.metrics_manager')  # Mock the metrics_manager used by the Flask app
     @patch('app.DISPLAY_MODE', 'page')  # Set DISPLAY_MODE to 'page' for this test
@@ -148,21 +167,95 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertIn(b'Display mode is not set to \'page\' or \'both\'.', response.data)
 
-    @patch('app.DISPLAY_MODE', 'console')  # Mock DISPLAY_MODE to 'console' for this test
-    @patch('app.TOP_X_APPS', 5)  # Mock TOP_X_APPS to 5 for this test
+    @patch('app.DISPLAY_MODE', 'console')  # Mock DISPLAY_MODE to 'console'
     @patch('builtins.print')  # Mock print to test console output
     def test_display_top_apps_console(self, mock_print):
         """Test the display_top_apps function in console mode."""
         top_apps = [("app1", 5), ("app2", 3)]
-        display_top_apps(top_apps)  # Call the function directly
-        mock_print.assert_called_with(f"Top 5 apps exceeding threshold: {top_apps}")
+        display_top_apps(top_apps)
+        mock_print.assert_called_with(f"Top {TOP_X_APPS} apps exceeding threshold: {top_apps}")
 
-    @patch('app.DISPLAY_MODE', 'page')  # Mock DISPLAY_MODE to 'page' for this test
+    @patch('app.DISPLAY_MODE', 'page')  # Mock DISPLAY_MODE to 'page'
     def test_display_top_apps_page_mode(self):
         """Test the display_top_apps function in page mode."""
         top_apps = [("app1", 5), ("app2", 3)]
-        display_top_apps(top_apps)  # Call the function directly
+        display_top_apps(top_apps)
         # No assertion needed since the function only contains a pass statement
+
+    @patch('app.DISPLAY_MODE', 'both')  # Mock DISPLAY_MODE to 'both'
+    @patch('builtins.print')  # Mock print to test console output
+    def test_display_top_apps_both_mode(self, mock_print):
+        """Test the display_top_apps function in both mode."""
+        top_apps = [("app1", 5), ("app2", 3)]
+        display_top_apps(top_apps)
+        mock_print.assert_called_with(f"Top {TOP_X_APPS} apps exceeding threshold: {top_apps}")
+
+    @patch('os.makedirs')  # Mock os.makedirs to avoid creating directories
+    @patch('builtins.open', new_callable=unittest.mock.mock_open)  # Mock open to avoid file operations
+    def test_write_exceedings_to_file_configuration(self, mock_open, mock_makedirs):
+        """Test the WRITE_EXCEEDINGS_TO_FILE configuration."""
+        top_apps = [("app1", 5), ("app2", 3)]
+
+        # Mock LOG_TO_FILE to False to prevent the logger from creating directories
+        with patch('config.LOG_TO_FILE', False):
+            # Test WRITE_EXCEEDINGS_TO_FILE = True
+            with patch('config.WRITE_EXCEEDINGS_TO_FILE', True):
+                importlib.reload(app_module)  # Reload the app module to apply the new configuration
+                app_module.log_exceedings(top_apps)
+                mock_makedirs.assert_called_once_with(os.path.dirname(app_module.EXCEEDINGS_FILE_PATH), exist_ok=True)
+                mock_open.assert_called_once_with(app_module.EXCEEDINGS_FILE_PATH, "a")
+                mock_open().write.assert_called()  # Ensure the file is written to
+
+            # Reset the mock for the next test
+            mock_makedirs.reset_mock()
+            mock_open.reset_mock()
+
+            # Test WRITE_EXCEEDINGS_TO_FILE = False
+            with patch('config.WRITE_EXCEEDINGS_TO_FILE', False):
+                importlib.reload(app_module)  # Reload the app module to apply the new configuration
+                app_module.log_exceedings(top_apps)
+                mock_makedirs.assert_not_called()  # Ensure no directories are created
+                mock_open.assert_not_called()  # Ensure no file operations are performed
+
+    def test_log_to_console_configuration(self):
+        """Test the LOG_TO_CONSOLE configuration."""
+        # Reset the logger's handlers and close any open file handlers
+        for handler in app_module.logger.handlers[:]:
+            if isinstance(handler, logging.FileHandler):
+                handler.close()  # Close the file handler to avoid ResourceWarning
+            app_module.logger.removeHandler(handler)
+
+        # Test LOG_TO_CONSOLE = True
+        with patch('config.LOG_TO_CONSOLE', True):
+            importlib.reload(app_module)  # Reload the app module to apply the new configuration
+            self.assertTrue(app_module.LOG_TO_CONSOLE)
+            self.assertTrue(any(isinstance(handler, logging.StreamHandler) for handler in app_module.logger.handlers))
+
+        # Reset the logger's handlers and close any open file handlers
+        for handler in app_module.logger.handlers[:]:
+            if isinstance(handler, logging.FileHandler):
+                handler.close()  # Close the file handler to avoid ResourceWarning
+            app_module.logger.removeHandler(handler)
+        
+    def test_log_to_file_configuration(self):
+        """Test the LOG_TO_FILE configuration."""
+        # Reset the logger's handlers
+        app_module.logger.handlers.clear()
+
+        # Test LOG_TO_FILE = True
+        with patch('config.LOG_TO_FILE', True):
+            importlib.reload(app_module)  # Reload the app module to apply the new configuration
+            self.assertTrue(app_module.LOG_TO_FILE)
+            self.assertTrue(any(isinstance(handler, logging.FileHandler) for handler in app_module.logger.handlers))
+
+        # Reset the logger's handlers
+        app_module.logger.handlers.clear()
+
+        # Test LOG_TO_FILE = False
+        with patch('config.LOG_TO_FILE', False):
+            importlib.reload(app_module)  # Reload the app module to apply the new configuration
+            self.assertFalse(app_module.LOG_TO_FILE)
+            self.assertFalse(any(isinstance(handler, logging.FileHandler) for handler in app_module.logger.handlers))
 
     @patch('app.threading.Thread')  # Mock threading.Thread to avoid starting a new thread
     @patch('app.app.run')  # Mock app.run to avoid running the Flask app
